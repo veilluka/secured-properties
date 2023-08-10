@@ -1,5 +1,5 @@
-import ch.cnc.SecureProperties;
-import ch.cnc.SecureProperty;
+import ch.vilki.secured.SecureProperties;
+import ch.vilki.secured.SecureProperty;
 import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Test;
 

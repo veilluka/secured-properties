@@ -1,11 +1,13 @@
-import ch.cnc.*;
+import ch.vilki.secured.SecStorage;
+import ch.vilki.secured.SecureProperty;
+import ch.vilki.secured.SecureStorageException;
+import ch.vilki.secured.SecureString;
 import com.github.windpapi4j.InitializationFailedException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;

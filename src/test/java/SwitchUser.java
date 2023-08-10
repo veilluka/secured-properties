@@ -1,7 +1,6 @@
-import ch.cnc.Console;
-import ch.cnc.SecStorage;
-import ch.cnc.SecureStorageException;
-import ch.cnc.SecureString;
+import ch.vilki.secured.SecStorage;
+import ch.vilki.secured.SecureStorageException;
+import ch.vilki.secured.SecureString;
 import com.github.windpapi4j.InitializationFailedException;
 import org.junit.jupiter.api.Test;
 

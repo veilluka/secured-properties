@@ -4,3 +4,5 @@ iniFile.xml
 *.idea
 
 
+/build/*
+.gradle/*

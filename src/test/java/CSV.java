@@ -1,12 +1,8 @@
-import ch.cnc.*;
+import ch.vilki.secured.SecureStorageException;
 import com.github.windpapi4j.InitializationFailedException;
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
