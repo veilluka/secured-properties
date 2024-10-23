@@ -42,7 +42,7 @@ public class Storage {
     }
 
     @Test
-    public void testOpenUnsecured() throws NoSuchAlgorithmException, InvalidKeySpecException, SecureStorageException, IOException {
+    public void testOpenUnsecured() throws Exception {
         Helper.createTestDir();
         if(Files.exists(Paths.get("test//unsecured.json"))) {
             try {

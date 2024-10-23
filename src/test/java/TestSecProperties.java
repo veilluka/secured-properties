@@ -117,7 +117,7 @@ public class TestSecProperties {
         secureProperties.saveProperties();
         secureProperties = null;
         try {
-            secureProperties = SecureProperties.openSecuredProperties(fileName.toString());
+            secureProperties = SecureProperties.openSecuredProperties(fileName.toString(), true);
         } catch (Exception e) {
             fail(e);
         }
