@@ -14,7 +14,7 @@ public class SecureStorageException extends Exception {
     public static String CSV_LABEL_KEY_MISSING = "labelKey is defined, but has no value in record";
     public static String CSV_KEY_NOT_UNIQUE = "found same key in different records, key must be unique";
     public static String CSV_LABEL_VALUE_MISSING = "labelKey is defined, but has no value in record";
-    public static String PASSWORD_TO_SHORT = "Password is to short, please at least 8 chars";
+    public static String PASSWORD_TO_SHORT = "Password is to short, please at least 12 chars";
 
     public static String OLD_VERSION="This file has been encrypted with old version, " +
             "recrypt the file first with recrypt command  secured-properties -recrypt <FILENAME> -pass <Password>. It will create new File with new encryption method";

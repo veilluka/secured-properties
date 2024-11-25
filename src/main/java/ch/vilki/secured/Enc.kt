@@ -90,12 +90,12 @@ class Enc {
         return java.util.Base64.getEncoder().encodeToString(combined)
     }
 
-    fun generatePassword(lowerCase: Int=5, upperCase: Int=5, numbers: Int=5, symbols: Int=5): String {
+    fun generatePassword(lowerCase: Int=6, upperCase: Int=8, numbers: Int=10, symbols: Int=6): String {
 
         val lowercaseChars = "abcdefghijklmnopqrstuvwxyz".toCharArray()
         val uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
         val nummerChars = "0123456789".toCharArray()
-        val symChars = "$?!@#%{}[]+-*@_=<>|:;".toCharArray()
+        val symChars = "?!@#%{}[]+-*@_=<>".toCharArray()
         val random: Random = SecureRandom()
         var pass = mutableListOf<String>()
         repeat(upperCase) {pass.add(uppercaseChars[random.nextInt(uppercaseChars.size)].toString())}

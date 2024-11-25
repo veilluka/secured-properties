@@ -125,8 +125,8 @@ public class Console  {
             {
                 if(ConsoleParser.cmd.hasOption("pass"))
                 {
-                    System.out.println("INFO: You have provided your own password. Please avoid using AND char in your password, " +
-                            " as it causes problems in different enviroments ");
+                    System.out.println("INFO: You have provided your own password. Please avoid using AND or $ ir ; or | char in your password, " +
+                            " as it causes problems in different enviroments when scripting. use rather longer password with more then 20 chars ");
                 }
 
                 String fileName = ConsoleParser.cmd.getOptionValue("create");

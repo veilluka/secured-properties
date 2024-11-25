@@ -53,7 +53,7 @@ public class SecStorage {
 
     public static void  createNewSecureStorage(String fileName,SecureString masterPassword, boolean createSecured)
             throws Exception {
-        if(createSecured && (masterPassword == null || masterPassword.get_value() == null || masterPassword.get_value().length < 8))
+        if(createSecured && (masterPassword == null || masterPassword.get_value() == null || masterPassword.get_value().length < 12))
         {
             throw new SecureStorageException(SecureStorageException.PASSWORD_TO_SHORT);
         }
