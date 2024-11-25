@@ -19,10 +19,9 @@ public class Console  {
 
     public static void run(LinkedHashSet<String> arguments) throws IOException {
         String[] args = arguments.toArray(new String[arguments.size()]);
-
         Console.main(args);
     }
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) throws IOException {
         if(args.length == 0)
         {
             System.out.println("No input. Use -help for help");
@@ -30,7 +29,6 @@ public class Console  {
             return;
         }
         ConsoleParser.initParser();
-
         try {
             ConsoleParser.parse(args);
         } catch (ParseException e) {
@@ -79,6 +77,12 @@ public class Console  {
             System.out.println("----------------------------------");
             return;
         }
+        if(ConsoleParser.cmd.hasOption("generatePassword"))
+        {
+            System.out.println(new SecureString(new Enc().generatePassword(6,6,6,6)));
+            System.exit(0);
+        }
+
         if(ConsoleParser.cmd.hasOption("recrypt"))
         {
             String fileName = ConsoleParser.cmd.getOptionValue("recrypt");
@@ -119,6 +123,12 @@ public class Console  {
             }
             if(ConsoleParser.cmd.hasOption("create"))
             {
+                if(ConsoleParser.cmd.hasOption("pass"))
+                {
+                    System.out.println("INFO: You have provided your own password. Please avoid using AND char in your password, " +
+                            " as it causes problems in different enviroments ");
+                }
+
                 String fileName = ConsoleParser.cmd.getOptionValue("create");
                 SecureString pass = null;
                 boolean secured = true; ;
@@ -126,7 +136,7 @@ public class Console  {
                 if(ConsoleParser.cmd.hasOption("unsecured")) secured = false;
                 if(secured && pass==null)
                 {
-                    pass = new SecureString(new Enc().generatePassword(4,4,4,4));
+                    pass = new SecureString(new Enc().generatePassword(6,6,6,6));
                     System.out.println("Using random password "+ pass);
                 }
                 SecStorage.createNewSecureStorage(fileName,pass,secured);
@@ -210,8 +220,12 @@ public class Console  {
         String key = null;
         if(!cmd.hasOption("key")) throw new Exception("key for property not provided");
         key = cmd.getOptionValue("key");
-        if(!cmd.hasOption("value")) throw new Exception("no value for property provided");
-        String val = cmd.getOptionValue("value");
+        String val = "";
+        if(!cmd.hasOption("value")){
+            logger.info("value not provided for this key, generate random value ");
+            val = new Enc().generatePassword(6,6,6,6);
+        }
+        else val = cmd.getOptionValue("value");
         SecureString secureString = new SecureString(val);
         String fileName = cmd.getOptionValue("addSecured");
         if(fileName == null) {fileName = cmd.getOptionValue("addUnsecured");}

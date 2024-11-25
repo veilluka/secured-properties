@@ -41,7 +41,7 @@ public class ConsoleParser {
         recrypt.setArgName("FILENAME");
         recrypt.setOptionalArg(true);
         Option gui = new Option("gui",false,"Run GUI ");
-
+        Option generatePassword = new Option( "generatePassword",false, "generates password with length 24");
 
 
         _options.addOption("print",false,"print all values");
@@ -58,6 +58,7 @@ public class ConsoleParser {
         _options.addOption(recrypt);
         _options.addOption(deleteProperty);
         _options.addOption(gui);
+        _options.addOption(generatePassword);
     }
 
 

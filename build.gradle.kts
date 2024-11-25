@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.fir.expressions.builder.buildArgumentList
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kotlinjvm:String by extra
@@ -20,6 +21,7 @@ application {
     mainModule.set("ch.vilki.secured")
     mainClass.set("ch.vilki.secured.Console")
 }
+
 
 repositories {
     mavenCentral()
@@ -69,13 +71,14 @@ tasks.register("generateVersionClass") {
     }
 }
 
+
 // Optionally, ensure that this task runs before compiling Java sources
 tasks.named("compileJava") {
     dependsOn("generateVersionClass")
 }
 
 javafx {
-    modules = listOf("javafx.controls", "javafx.fxml", "javafx.web","javafx.base","javafx.swing")
+    modules = listOf("javafx.controls", "javafx.fxml", "javafx.base")
     version = versionJavafx
 }
 
