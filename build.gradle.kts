@@ -8,9 +8,14 @@ val versionJavafx: String by extra
 plugins {
     application
     id("org.openjfx.javafxplugin") version "0.0.14"
-    id("org.beryx.jlink") version "2.22.1"
     id ("org.javamodularity.moduleplugin") version "1.8.12"
-    kotlin("jvm") version "1.8.21"
+    kotlin("jvm") version "2.0.0"
+    distribution
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 val compileJava: JavaCompile by tasks
@@ -82,18 +87,10 @@ javafx {
     version = versionJavafx
 }
 
-jlink{
-    addOptions("--strip-debug","--strip-debug","--compress","2","--no-header-files","--no-man-pages")
-    launcher {
-        name = "secured"
-    }
-    forceMerge("log4j-api")
-    addExtraDependencies("javafx","log4j")
-    imageZip.set(project.file("${project.buildDir}/image-zip/jfxldap-image.zip"))
-    jpackage {
-        if (org.gradle.internal.os.OperatingSystem.current().isWindows) {
-            installerOptions.addAll(listOf("--win-per-user-install", "--win-dir-chooser", "--win-menu", "--win-shortcut"))
-            imageOptions.add("--win-console")
+distributions {
+    main {
+        contents {
+            from("README.adoc")
         }
     }
 }
@@ -107,11 +104,11 @@ tasks.compileTestJava {
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = "21"
 }
 
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = "21"
 }
 
