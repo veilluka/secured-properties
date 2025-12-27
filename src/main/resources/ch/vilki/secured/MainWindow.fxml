@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="646.0" prefWidth="847.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.vilki.secured.MainWindowController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="646.0" prefWidth="847.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.vilki.secured.MainWindowController">
    <left>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="606.0" prefWidth="337.0" BorderPane.alignment="CENTER">
          <children>
@@ -33,6 +33,7 @@
             <Button fx:id="_buttonCreateFile" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" text="CREATE FILE" />
             <Button fx:id="_buttonAddProperty" layoutX="61.0" layoutY="13.0" mnemonicParsing="false" text="ADD PROPERTY" />
             <Button fx:id="_buttonImportCSV" mnemonicParsing="false" text="IMPORT CSV" />
+            <Button fx:id="_buttonRecrypt" mnemonicParsing="false" text="RECRYPT" />
         </items>
       </ToolBar>
    </top>

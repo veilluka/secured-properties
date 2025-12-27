@@ -350,6 +350,13 @@ public class SecStorage {
         if(!Files.exists(Paths.get(fileName))) throw new SecureStorageException(SecureStorageException.FILE_NOT_EXISTS + fileName);
         _storage = new SecStorage();
         _storage._secureProperties = SecureProperties.openSecuredProperties(fileName, true);
+        
+        // Initialize WinDPAPI if supported
+        if(WinDPAPI.isPlatformSupported())
+        {
+            _storage._winDPAPI = WinDPAPI.newInstance(WinDPAPI.CryptProtectFlag.CRYPTPROTECT_UI_FORBIDDEN);
+        }
+        
         if(!_storage.is_secureMode() && currentPassword == null)
         {
             String saltedHash = new Enc().getSaltedHash(newPassword.get_value());

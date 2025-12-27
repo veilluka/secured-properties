@@ -112,3 +112,11 @@ compileTestKotlin.kotlinOptions {
     jvmTarget = "21"
 }
 
+// Custom task to run the GUI  
+tasks.register<Exec>("runGui") {
+    group = "application"
+    description = "Run the application in GUI mode"
+    commandLine("cmd", "/c", "gradlew.bat", "run", "--args=-gui")
+    workingDir = projectDir
+}
+

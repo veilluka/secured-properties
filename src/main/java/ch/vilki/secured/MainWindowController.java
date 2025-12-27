@@ -57,10 +57,12 @@ public class MainWindowController {
     @FXML Button _buttonCreateFile;
     @FXML Button _buttonAddProperty;
     @FXML Button _buttonImportCSV;
+    @FXML Button _buttonRecrypt;
 
     //@FXML  NotificationPane _notificationPane;
     Gui _gui;
     SecStorage _secStorage = null;
+    String _currentFileName = null;
 
     final ContextMenu _attributeValuesContextMenu = new ContextMenu();
     MenuItem _delete = new MenuItem("DELETE");
@@ -391,6 +393,7 @@ public class MainWindowController {
         _buttonCreateFile.setGraphic(new ImageView(new Image(MainWindowController.class.getResourceAsStream("/ch/vilki/secured/addFile.png"))));
         _buttonAddProperty.setGraphic(new ImageView(new Image(MainWindowController.class.getResourceAsStream("/ch/vilki/secured/addProperty.png"))));
         _buttonImportCSV.setGraphic(new ImageView(new Image(MainWindowController.class.getResourceAsStream("/ch/vilki/secured/importFromCSV.png"))));
+        _buttonRecrypt.setGraphic(new ImageView(new Image(MainWindowController.class.getResourceAsStream("/ch/vilki/secured/encrypt.png"))));
         _buttonOpenFile.setOnAction(x->openFile());
         _buttonCreateFile.setOnAction(x-> {
             try {
@@ -434,6 +437,12 @@ public class MainWindowController {
 
         });
         _buttonImportCSV.setDisable(true);
+        _buttonRecrypt.setDisable(true);
+
+
+        _buttonRecrypt.setOnAction(x->{
+            recryptStorage();
+        });
 
         _buttonImportCSV.setOnAction(x->{
             FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("CSV files (*.csv)","*.csv");
@@ -568,6 +577,7 @@ public class MainWindowController {
          try {
             SecStorage.createNewSecureStorage(file.getAbsolutePath(),pass,true);
             _secStorage = SecStorage.open_SecuredStorage(file.getAbsolutePath(),true);
+            _currentFileName = file.getAbsolutePath();
         } catch (SecureStorageException | NoSuchAlgorithmException | InvalidKeySpecException | InitializationFailedException| IOException e) {
            GuiHelper.EXCEPTION("Creation failed",e.getMessage(),e);
            return;
@@ -583,6 +593,7 @@ public class MainWindowController {
             addProperty(s,d,_treeViewEntries.getRoot());
         }
         _buttonImportCSV.setDisable(false);
+        _buttonRecrypt.setDisable(false);
     }
 
     public void openFile()
@@ -616,12 +627,14 @@ public class MainWindowController {
                     }
                 }
                 _secStorage = SecStorage.open_SecuredStorage(file.getAbsolutePath(),true);
+                _currentFileName = file.getAbsolutePath();
            }
 
         }
         catch (Exception e)
         {
             GuiHelper.EXCEPTION("Error opening file",e.getMessage(),e);
+            return;
         }
         GuiProp secureProperty = new GuiProp();
         secureProperty.set_name(file.getName());
@@ -638,6 +651,7 @@ public class MainWindowController {
         }
         //_notificationPane.show("File opened");
         _buttonImportCSV.setDisable(false);
+        _buttonRecrypt.setDisable(false);
     }
 
      private void addProperty(String key, List<SecureProperty> properties ,TreeItem<GuiProp> parent)
@@ -772,5 +786,73 @@ public class MainWindowController {
         _treeViewEntries.getSelectionModel().clearSelection();
         _selectedProp = null;
         //_notificationPane.show("Property renamed");
+    }
+
+    private void recryptStorage()
+    {
+        if(_secStorage == null || _currentFileName == null)
+        {
+            GuiHelper.ERROR("No file open", "Please open a secured properties file first");
+            return;
+        }
+
+        String fileName = _currentFileName;
+        
+        Pair<SecureString, SecureString> passwords = GuiHelper.enterTwoPasswords(
+            "Recrypt Storage",
+            "Enter current master password and new master password"
+        );
+        
+        if(passwords == null) return;
+        
+        SecureString currentPassword = passwords.getKey();
+        SecureString newPassword = passwords.getValue();
+        
+        if(newPassword.get_value() == null || newPassword.get_value().length < 12)
+        {
+            GuiHelper.ERROR("Password too short", "New password must be at least 12 characters long");
+            currentPassword.destroyValue();
+            newPassword.destroyValue();
+            return;
+        }
+        
+        try
+        {
+            // Verify current password first
+            if(!SecStorage.isPasswordCorrect(fileName, currentPassword))
+            {
+                GuiHelper.ERROR("Incorrect password", "The current password you entered is incorrect");
+                return;
+            }
+            
+            // Change the master password (don't destroy current storage first)
+            SecStorage.changeMasterPassword(fileName, currentPassword, newPassword);
+            
+            // Close and reopen with new password
+            SecStorage.destroy();
+            _secStorage = SecStorage.open_SecuredStorage(fileName, newPassword);
+            
+            GuiHelper.INFO("Success", "Storage has been recrypted with new master password");
+        }
+        catch (Exception e)
+        {
+            GuiHelper.EXCEPTION("Recrypt failed", e.getMessage(), e);
+            try {
+                // Try to reopen with new password first (in case it partially succeeded)
+                try {
+                    _secStorage = SecStorage.open_SecuredStorage(fileName, newPassword);
+                } catch (Exception ex) {
+                    // If new password doesn't work, try current password
+                    _secStorage = SecStorage.open_SecuredStorage(fileName, currentPassword);
+                }
+            } catch (Exception ex) {
+                GuiHelper.EXCEPTION("Failed to reopen storage", ex.getMessage(), ex);
+            }
+        }
+        finally
+        {
+            currentPassword.destroyValue();
+            newPassword.destroyValue();
+        }
     }
 }

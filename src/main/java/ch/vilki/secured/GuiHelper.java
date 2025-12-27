@@ -180,6 +180,67 @@ public class GuiHelper {
         return  new SecureString(pass[0]);
     }
 
+    public static Pair<SecureString, SecureString> enterTwoPasswords(String title, String header)
+    {
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+        
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        PasswordField currentPassword = new PasswordField();
+        currentPassword.setPromptText("Current Password");
+        PasswordField newPassword = new PasswordField();
+        newPassword.setPromptText("New Password");
+        PasswordField confirmPassword = new PasswordField();
+        confirmPassword.setPromptText("Confirm New Password");
+
+        grid.add(new Label("Current Password:"), 0, 0);
+        grid.add(currentPassword, 1, 0);
+        grid.add(new Label("New Password:"), 0, 1);
+        grid.add(newPassword, 1, 1);
+        grid.add(new Label("Confirm Password:"), 0, 2);
+        grid.add(confirmPassword, 1, 2);
+        
+        Node okButton = dialog.getDialogPane().lookupButton(okButtonType);
+        okButton.setDisable(true);
+        
+        dialog.getDialogPane().setContent(grid);
+        Platform.runLater(() -> currentPassword.requestFocus());
+
+        // Enable button only when all fields are filled and new passwords match
+        javafx.beans.binding.BooleanBinding binding = currentPassword.textProperty().isEmpty()
+                .or(newPassword.textProperty().isEmpty())
+                .or(confirmPassword.textProperty().isEmpty())
+                .or(newPassword.textProperty().isNotEqualTo(confirmPassword.textProperty()));
+        
+        okButton.disableProperty().bind(binding);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == okButtonType) {
+                if (!newPassword.getText().equals(confirmPassword.getText())) {
+                    return null;
+                }
+                return new Pair<>(currentPassword.getText(), newPassword.getText());
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            return new Pair<>(
+                new SecureString(result.get().getKey()),
+                new SecureString(result.get().getValue())
+            );
+        }
+        return null;
+    }
+
     public static File selectFile(FileChooser.ExtensionFilter extensionFilter ,String title, FILE_OPTIONS file_options, Stage stage)
     {
         File selectedFile = null;
